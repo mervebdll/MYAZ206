@@ -7,10 +7,12 @@ namespace LinkedListTests
     public class SinglyLinkedListTests
     {
         private SinglyLinkedList<int> _list;
+
         public SinglyLinkedListTests()
         {//AddFirst çalýþtýðý için ilk baþta 6 eklenecek sonra onun baþýna 8 eklenecek. 8-6
             _list = new SinglyLinkedList<int>(new int[] { 6, 8 });//Field'ý baþalt
         }
+
         [Fact]
         public void Count_Test()
         {
@@ -110,15 +112,66 @@ namespace LinkedListTests
                 item => Assert.Equal(value, item),
                 item => Assert.Equal(6, item));// 8 [value] 6 
         }
+
         [Fact]
         public void AddAfter_ArgumentException()
         {
             // 8 [value] 6
             // act
             var node = new SinglyLinkedListNode<int>(55);
+            
 
             // Assert
             Assert.Throws<ArgumentException>(() => _list.AddAfter(node, 45));
+        }
+
+        [Fact]
+        public void RemoveFirst_Test()
+        {
+            // Act
+            _list.RemoveFirst();
+
+            // Assert
+            Assert.Collection(_list, item => Assert.Equal(6, item));// 8, 6
+        }
+
+        [Fact]
+        public void RemoveFirst_Exception_Test()
+        {
+            // Act
+            _list.RemoveFirst();
+            _list.RemoveFirst();
+
+            // Assert
+            Assert.Throws<Exception>(() => _list.RemoveFirst());// 8 6
+        }
+
+        [Fact]
+        public void RemoveLast_Test()
+        {
+            // act
+            var result = _list.RemoveLast();
+
+            // Assert
+            Assert.Collection(_list,
+                item => Assert.Equal(8, item));// 8 6 
+
+            Assert.Equal(6, result);
+        }
+
+        [Theory]
+        [InlineData(8)]
+        public void Remove_Test(int value)
+        {
+            _list.AddFirst(10);// 10 8 6
+
+            // act
+            _list.Remove(value);
+
+            // Assert
+            Assert.Collection(_list,
+                item => Assert.Equal(10, item),
+                item => Assert.Equal(6, item));//10, 6
         }
     }
 }
